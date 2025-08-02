@@ -12,15 +12,15 @@ type BookBoxProps = {
 
 };
 
-const BookBox: React.FC<BookBoxProps> = (props) => {
+const BookBox: React.FC<BookBoxProps> = ({ image, heading, price, onClick }) => {
   return (
     <div className="BookContainer">
       <div className="imageBox">
-        <img src={props.image} alt={props.heading} />
+        <img src={image} alt={heading} />
       </div>
-      <h1>{props.heading}</h1>
-      <p>{props.price}</p>
-      <button onClick={props.onClick} style={{ cursor: "pointer" }}>
+      <h1>{heading}</h1>
+      <p>{price}</p>
+      <button onClick={onClick} style={{ cursor: "pointer" }}>
         CHECK LISTING
       </button>
     </div>
