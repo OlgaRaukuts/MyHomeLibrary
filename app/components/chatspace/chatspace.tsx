@@ -33,7 +33,7 @@ interface Message {
   };
 }
 
-const ChatSpace: React.FC<ChatProps> = ({ chatId, name, profilePic }) => {
+const ChatSpace: React.FC<ChatProps> = ({ chatId, name, profilePic }) => { //отображает чат и слушает обновления сообшений в firebase
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [replyToMessage, setReplyToMessage] = useState<Message | null>(null);
@@ -41,12 +41,12 @@ const ChatSpace: React.FC<ChatProps> = ({ chatId, name, profilePic }) => {
   useEffect(() => {
     if (!chatId || !auth.currentUser) return;
 
-    const chatRef = doc(db, "chats", chatId);
+    const chatRef = doc(db, "chats", chatId); // cоздает ссылку на документ в Firestore: chats/{chatId}
 
-    const unsubscribe = onSnapshot(chatRef, (snapshot) => {
+    const unsubscribe = onSnapshot(chatRef, (snapshot) => { //вызывается при каждом изменении документа
       if (snapshot.exists()) {
-        const data = snapshot.data();
-        setMessages(data.messages || []);
+        const data = snapshot.data(); //получает данные
+        setMessages(data.messages || []); //Извлекает messages из данных и сохраняет в состояние messages. Если data.messages не существует — сохраняет пустой массив.
       }
     });
 
@@ -66,7 +66,7 @@ const ChatSpace: React.FC<ChatProps> = ({ chatId, name, profilePic }) => {
       type: "text",
       ...(replyToMessage && {
         replyTo: {
-          ...(replyToMessage.text && { text: replyToMessage.text }),
+          ...(replyToMessage.text && { text: replyToMessage.text }), //добавляет text, только если он есть
           ...(replyToMessage.imageUrl && { imageUrl: replyToMessage.imageUrl }),
           senderId: replyToMessage.senderId,
         },
@@ -90,7 +90,7 @@ const ChatSpace: React.FC<ChatProps> = ({ chatId, name, profilePic }) => {
       } else {
         const existingMessages = chatSnap.data().messages || [];
         await updateDoc(chatRef, {
-          messages: [...existingMessages, message],
+          messages: [...existingMessages, message], //Firestore не умеет "автоматически дописывать" в массив — ты должен сам достать и пересобрать весь массив.
           lastMessage: message.text,
           lastMessageTime: timestamp,
         });
@@ -103,13 +103,13 @@ const ChatSpace: React.FC<ChatProps> = ({ chatId, name, profilePic }) => {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => { //Это асинхронный обработчик события загрузки файла (<input type="file" />).
     const file = e.target.files?.[0];
     if (!file || !auth.currentUser) return;
 
-    const formData = new FormData();
+    const formData = new FormData(); //объект, предназначенный для передачи файлов и данных через HTTP.
     formData.append("file", file);
-    formData.append("upload_preset", uploadPreset);
+    formData.append("upload_preset", uploadPreset); //преднастройка Cloudinary, задаётся в панели управления (разрешает анонимную загрузку, правила и т.д.).
 
     try {
       const res = await fetch(cloudinaryUploadUrl, {
@@ -194,7 +194,7 @@ const ChatSpace: React.FC<ChatProps> = ({ chatId, name, profilePic }) => {
               <div
                 key={index}
                 className={`message ${
-                  msg.senderId === auth.currentUser?.uid ? "sent" : "received"
+                  msg.senderId === auth.currentUser?.uid ? "sent" : "received" //если сообщение твоё — класс sent, иначе received.
                 }`}
                 onClick={() => setReplyToMessage(msg)}
               >
