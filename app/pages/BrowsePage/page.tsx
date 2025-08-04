@@ -8,3 +8,5 @@ export default function Page() {
     </Suspense>
   );
 }
+
+//React Suspense для ленивой (отложенной) загрузки компонента BrowsePageContent

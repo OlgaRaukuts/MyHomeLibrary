@@ -1,3 +1,4 @@
+//контекст аутентификации (AuthContext) для всего React-приложения, чтобы получить доступ к текущему пользователю Firebase из любой части приложения.
 "use client";
 
 import {
@@ -16,6 +17,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+//Компонент-обёртка, который будет помещаться вокруг <App /> или отдельных частей, чтобы дать доступ к пользователю.
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);

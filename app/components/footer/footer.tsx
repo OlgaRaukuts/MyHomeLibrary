@@ -29,7 +29,7 @@ const Footer = () => {
           <h5 style={{ color: "#F4AD0F" }}>Quick Links</h5>
           <ul>
             <li>
-              <a href="">Home</a>
+              <a href="">Home</a> //*заменить на реальные ссылки *//
             </li>
             <li>
               <a href="">Browse Books</a>

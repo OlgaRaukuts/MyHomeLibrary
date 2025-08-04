@@ -20,13 +20,13 @@ const Header = () => {
   }, []);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen(!menuOpen); 
   };
 
   const handleNavigation = (path: string) => {
-    setLoading(true);
+    setLoading(true); //Обычно это используется, чтобы показать спиннер или индикатор загрузки на экране.
     setTimeout(() => {
-      router.push(path);
+      router.push(path); //выполняет переход на новую страницу по указанному маршруту path.
       setLoading(false);
     }, 3000);
   };
@@ -38,7 +38,7 @@ const Header = () => {
         <a href="/">
           <img src="/logo.png" alt="Logo" className="headerlogo" />
         </a>
-        <nav className={`top-nav ${menuOpen ? "open" : ""}`}>
+        <nav className={`top-nav ${menuOpen ? "open" : ""}`}> // Навигационное меню. Если menuOpen === true, то к классу top-nav добавляется "open", что, вероятно, делает меню видимым на мобильных устройствах (бургер-меню).
           <ul>
             <li>
               <a href="/">HOME</a>

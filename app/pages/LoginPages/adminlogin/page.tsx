@@ -14,7 +14,7 @@ const AdminLoginPage = () => {
   const router = useRouter(); // Use Next.js router for navigation
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); //Prevents form from reloading the page
     setError("");
 
     try {

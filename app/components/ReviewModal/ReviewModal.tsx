@@ -12,7 +12,7 @@ interface ReviewModalProps {
 
 const ReviewModal: React.FC<ReviewModalProps> = ({ sellerId, onClose }) => {
   const { user } = useAuth(); // Get authenticated user
-  const [rating, setRating] = useState<number>(1);
+  const [rating, setRating] = useState<number>(1); //не нужна эта звезда по умолчанию нам
   const [reviewText, setReviewText] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [reviewerName, setReviewerName] = useState<string>("");

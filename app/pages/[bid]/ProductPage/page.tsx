@@ -48,16 +48,16 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (bid) {
+    if (bid) { //if bid exists we start loading 
       const fetchBookAndSeller = async () => {
         try {
           // Fetch Book Details
           const booksRef = collection(db, "books");
-          const q = query(booksRef, where("bid", "==", bid));
+          const q = query(booksRef, where("bid", "==", bid));  
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
-            const bookData = querySnapshot.docs[0].data() as BookProps;
+            const bookData = querySnapshot.docs[0].data() as BookProps; //Если нашлась хотя бы одна книга — берём первую (docs[0]) и приводим к типу BookProps
             setBook(bookData);
             setMainImage(bookData.uploadedImages?.[0] || "/product.png");
 
@@ -66,7 +66,8 @@ const ProductPage = () => {
               const sellerRef = doc(db, "users", bookData.uid);
               const sellerSnap = await getDoc(sellerRef);
               if (sellerSnap.exists()) {
-                setSeller(sellerSnap.data() as SellerProps);
+                setSeller(sellerSnap.data() as SellerProps); //Если документ пользователя найден — сохраняем его данные в состояние seller.
+//Если нет — выводим ошибку в консоль.
               } else {
                 console.error("No seller found");
               }
@@ -81,8 +82,8 @@ const ProductPage = () => {
       };
       fetchBookAndSeller();
     }
-  }, [bid]);
-
+  }, [bid]); //useEffect будет вызываться каждый раз, когда bid изменяется.
+ 
   // Handle "Chat with Seller" Button Click
   const handleChat = async () => {
     if (!auth.currentUser || !book?.uid) {
@@ -90,9 +91,9 @@ const ProductPage = () => {
       return;
     }
 
-    const buyerId = auth.currentUser.uid;
-    const sellerId = book.uid;
-    const chatId = `${buyerId}_${sellerId}`;
+    const buyerId = auth.currentUser.uid; //ID текущего авторизованного пользователя (предположительно покупатель)
+    const sellerId = book.uid; //ID владельца книги
+    const chatId = `${buyerId}_${sellerId}`; //уникальный идентификатор чата, основанный на их ID
 
     try {
       const chatRef = collection(db, "chats");
@@ -109,7 +110,7 @@ const ProductPage = () => {
         });
       }
 
-      router.push(`/pages/chats/${chatId}/ChatPage`);
+      router.push(`/pages/chats/${chatId}/ChatPage`); //После создания (или если чат уже был) — редирект в нужный чат.
     } catch (error) {
       console.error("Error starting chat:", error);
     }

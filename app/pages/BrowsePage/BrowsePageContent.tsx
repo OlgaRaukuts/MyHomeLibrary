@@ -43,9 +43,10 @@ const BrowsePageContent: React.FC = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const categoryFromURL = searchParams.get("category") || "";
+    const categoryFromURL = searchParams.get("category") || ""; //This line reads a specific parameter from the URL — category. For example:URL: https://example.com/browse?category=Fiction would return "Fiction"
+    searchParams.get("category")
     setCategory(categoryFromURL);
-  }, [searchParams]);
+  }, [searchParams]); //It runs once when the component mounts (initial load), and again every time searchParams changes, i.e., when the query string in the URL updates.
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -55,7 +56,7 @@ const BrowsePageContent: React.FC = () => {
         const bookList = bookSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })) as Book[];
+        })) as Book[]; //It casts the result as Book[], meaning an array of Book type objects.
 
         const approvedBooks = bookList.filter(
           (book) => book.moderationStatus === "approved"
@@ -73,11 +74,11 @@ const BrowsePageContent: React.FC = () => {
     fetchBooks();
   }, []);
 
-  const handleSearch = () => {
+  const handleSearch = () => { //filter books based on a search term
     if (searchTerm.trim() === "") {
       setFilteredBooks(books);
       return;
-    }
+    } //If searchTerm is empty or only whitespace, it resets the filter and shows all books (setFilteredBooks(books)). If there's something typed in, the function will continue (you haven’t shown the rest) — probably to filter the books based on title, author, tags, etc.
 
     const lowerSearch = searchTerm.toLowerCase();
     const searchResults = books.filter(
@@ -89,19 +90,19 @@ const BrowsePageContent: React.FC = () => {
     setFilteredBooks(searchResults);
   };
 
-  const handleFilter = () => {
+  const handleFilter = () => { //a flexible filter function that allows users to narrow down books by multiple criteria
     let updatedBooks = books.filter((book) => {
       return (
         (category === "" || book.category.toLowerCase().includes(category.toLowerCase())) &&
         (author === "" || book.author.toLowerCase().includes(author.toLowerCase())) &&
         (condition === "" || book.condition.toLowerCase() === condition.toLowerCase()) &&
         (minPrice === "" || book.price >= parseInt(minPrice)) &&
-        (maxPrice === "" || book.price <= parseInt(maxPrice))
+        (maxPrice === "" || book.price <= parseInt(maxPrice)) //include only books where the price is greater than or equal to the entered min value.
       );
     });
 
-    // Sort by created date first
-    updatedBooks.sort((a, b) =>
+    // sorts books by their creation date, with the most recently added books appearing first
+    updatedBooks.sort((a, b) => 
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
@@ -113,7 +114,7 @@ const BrowsePageContent: React.FC = () => {
 
     setFilteredBooks(updatedBooks);
   };
-
+//Note: <center> is outdated in HTML5. It's better to use CSS (text-align: center or flexbox)
   return (
     <div>
       <Header />
