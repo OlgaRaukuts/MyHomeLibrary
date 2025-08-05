@@ -68,13 +68,7 @@ const SideMenu = () => {
             handleNavigation(`/pages/SellerDashboard/${user.uid}/Message`)
           }
         >
-          <img src="/dashmessages.svg" alt="Messages Icon" /> Messages
-        </button>
-        <button
-          onClick={() =>
-            handleNavigation(`/pages/SellerDashboard/${user.uid}/Settings`)
-          }
-        >
+   
           <img src="/dashbuy.svg" alt="Settings" /> Settings
         </button>
         <button onClick={() => handleNavigation("/")}>

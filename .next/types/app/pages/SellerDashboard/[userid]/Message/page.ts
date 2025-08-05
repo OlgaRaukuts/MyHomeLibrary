@@ -1,8 +1,8 @@
 // File: /Users/admin/Desktop/Olya/Projects/MyHomeLibrary/app/pages/SellerDashboard/[userid]/Message/page.tsx
-import * as entry from '../../../../../../../app/pages/SellerDashboard/[userid]/Message/page.js'
+import * as entry from '../../../../../../../app/pages/ReaderDashboard/[userid]/Message/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../../../app/pages/SellerDashboard/[userid]/Message/page.js')
+type TEntry = typeof import('../../../../../../../app/pages/ReaderDashboard/[userid]/Message/page.js')
 
 type SegmentParams<T extends Object = any> = T extends Record<string, any>
   ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }
