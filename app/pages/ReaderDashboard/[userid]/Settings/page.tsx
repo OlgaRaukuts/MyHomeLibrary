@@ -8,10 +8,6 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import {
-  cloudinaryUploadUrl,
-  uploadPreset,
-} from "../../../../cloudinary-config/cloudinary-config";
 
 import TopMenu from "../../components/topmenu/topmenu";
 import SideTopMenu from "../../components/sidemenu/sidemenu";
@@ -119,8 +115,8 @@ const UserSettings: React.FC = () => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", uploadPreset);
-
+   // formData.append("upload_preset", uploadPreset);
+/*
     try {
       const response = await fetch(cloudinaryUploadUrl, {
         method: "POST",
@@ -136,6 +132,7 @@ const UserSettings: React.FC = () => {
     } catch (error) {
       console.error("Image upload failed:", error);
     }
+      */
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

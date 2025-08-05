@@ -1,1 +1,20 @@
-{}
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js",
+  "/pages/AboutUs/page": "app/pages/AboutUs/page.js",
+  "/pages/BrowsePage/page": "app/pages/BrowsePage/page.js",
+  "/pages/ContactUS/page": "app/pages/ContactUS/page.js",
+  "/pages/LoginPages/adminlogin/page": "app/pages/LoginPages/adminlogin/page.js",
+  "/pages/LoginPages/userlogin/page": "app/pages/LoginPages/userlogin/page.js",
+  "/pages/LoginPages/usersignup/page": "app/pages/LoginPages/usersignup/page.js",
+  "/pages/Moderation/[adminid]/AddModerator/page": "app/pages/Moderation/[adminid]/AddModerator/page.js",
+  "/pages/Moderation/[adminid]/AllListings/page": "app/pages/Moderation/[adminid]/AllListings/page.js",
+  "/pages/Moderation/[adminid]/AllUsers/page": "app/pages/Moderation/[adminid]/AllUsers/page.js",
+  "/pages/Moderation/[adminid]/NewListings/page": "app/pages/Moderation/[adminid]/NewListings/page.js",
+  "/pages/[bid]/ProductPage/page": "app/pages/[bid]/ProductPage/page.js",
+  "/pages/ReaderDashboard/[userid]/Settings/page": "app/pages/ReaderDashboard/[userid]/Settings/page.js",
+  "/pages/ReaderDashboard/[userid]/dashboard/page": "app/pages/ReaderDashboard/[userid]/dashboard/page.js",
+  "/pages/ReaderDashboard/[userid]/AddBook/page": "app/pages/ReaderDashboard/[userid]/AddBook/page.js",
+  "/pages/ReaderDashboard/[userid]/ViewBook/page": "app/pages/ReaderDashboard/[userid]/ViewBook/page.js"
+}

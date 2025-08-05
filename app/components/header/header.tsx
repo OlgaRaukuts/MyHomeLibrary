@@ -27,7 +27,7 @@ const Header = () => {
       {loading && <LoadingScreen />}
       <div className="MenuContainer">
         <a href="/">
-          <img src="/logo.png" alt="Logo" className="headerlogo" />
+          <img src="/headerImg.png" alt="Logo" className="headerlogo" />
         </a>
         <nav className={`top-nav ${menuOpen ? "open" : ""}`}> 
           <ul>

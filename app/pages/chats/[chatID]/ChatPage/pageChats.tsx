@@ -14,7 +14,6 @@ import "./chatstyle.css";
 import Header from "../../../../components/header/header";
 import Footer from "../../../../components/footer/footer";
 import Contact from "../../../../components/contactelement/contactelement";
-import ChatSpace from "../../../../components/chatspace/chatspace";
 
 interface ContactType {
   chatId: string;
@@ -111,17 +110,6 @@ const BuyerChatPage = () => {
           )}
         </div>
 
-        <div className="chatContainer">
-          {selectedChat ? (
-            <ChatSpace
-              chatId={selectedChat.chatId}
-              name={selectedChat.name}
-              profilePic={selectedChat.profilePic}
-            />
-          ) : (
-            <p>Select a contact to start chatting</p>
-          )}
-        </div>
       </div>
       <Footer />
     </>

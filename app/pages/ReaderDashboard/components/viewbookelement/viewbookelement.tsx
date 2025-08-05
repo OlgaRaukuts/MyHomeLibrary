@@ -2,10 +2,6 @@ import React, { useRef, useEffect, useState } from "react";
 import "./viewbookelement.css";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../firebase-config/firebase-config";
-import {
-  cloudinaryUploadUrl,
-  uploadPreset,
-} from "../../../../cloudinary-config/cloudinary-config";
 import { deleteDoc } from "firebase/firestore";
 
 interface Props {
@@ -101,7 +97,7 @@ const ViewBookElement: React.FC<Props> = (props) => {
   const uploadToCloudinary = async (image: File) => {
     const formData = new FormData();
     formData.append("file", image);
-    formData.append("upload_preset", uploadPreset);
+    /*formData.append("upload_preset", uploadPreset);
 
     const res = await fetch(cloudinaryUploadUrl, {
       method: "POST",
@@ -109,7 +105,7 @@ const ViewBookElement: React.FC<Props> = (props) => {
     });
 
     const data = await res.json();
-    return data.secure_url;
+    return data.secure_url; */
   };
 
   const handleUpdate = async () => {
@@ -119,7 +115,7 @@ const ViewBookElement: React.FC<Props> = (props) => {
 
       if (images.length > 0) {
         const uploadPromises = images.map((img) => uploadToCloudinary(img));
-        uploadedImageURLs = await Promise.all(uploadPromises);
+      //  uploadedImageURLs = await Promise.all(uploadPromises);
       }
 
       const bookRef = doc(db, "books", props.id);

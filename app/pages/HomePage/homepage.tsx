@@ -3,7 +3,6 @@ import "./homepage.css";
 import React, { useEffect, useState } from "react";
 import Category from "../../components/category/category";
 import BookBox from "../../components/bookbox/bookbox";
-import Review from "../../components/review/review";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config/firebase-config";
 import Link from "next/link";
@@ -247,16 +246,6 @@ const Homepage = () => {
             <div style={{ color: "#F4AD0F" }}>SAY....</div>
           </h1>
           <img src="/review.png" alt="reviews" />
-        </div>
-        <div className="AllReviewsContainer">
-          {reviews.map((review, index) => (
-            <Review
-              key={index}
-              review={review.review}
-              name={review.name}
-              type={review.type}
-            />
-          ))}
         </div>
       </section>
     </>

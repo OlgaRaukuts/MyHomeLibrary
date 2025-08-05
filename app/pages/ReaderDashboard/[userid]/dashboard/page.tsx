@@ -2,11 +2,8 @@
 
 import { useEffect, useState, use } from "react";
 import "./sellerdashboard.css";
-import DashTop from "../../components/dashtop/dashtop";
 import Chart from "../../components/chart/chart";
 import ContactCard from "../../components/contacts/contacts";
-import BookCal from "../../components/bookcal/bookcal";
-import Review from "../../components/review/review";
 import {
   getDocs,
   collection,
@@ -178,12 +175,6 @@ export default function SellerDashboard({
 
   return (
     <div className="tempconta">
-      <DashTop
-        lclicks={92}
-        response={2}
-        listings={listingCount}
-        rating={averageRating}
-      />
 
       <div className="containertwo">
         <Chart data={chartData} />
@@ -210,26 +201,7 @@ export default function SellerDashboard({
       <div className="containerthree">
         <div className="Listings">
           <h3>Book Worth Calculator</h3>
-          <BookCal />
         </div>
-        <div className="Reviews">
-  <h3>Reviews</h3>
-  <div className="reviews-scrollable">
-    {reviews.length === 0 ? (
-      <p>No reviews yet.</p>
-    ) : (
-      reviews.map((review) => (
-        <Review
-          key={review.id}
-          rating={review.rating}
-          text={review.text}
-          reviewer={review.reviewer}
-          onDelete={() => handleDeleteReview(review.id)}
-        />
-      ))
-    )}
-  </div>
-</div>
 
       </div>
     </div>

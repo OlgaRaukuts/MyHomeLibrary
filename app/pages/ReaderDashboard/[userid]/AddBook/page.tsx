@@ -4,10 +4,6 @@ import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { db, auth } from "../../../../firebase-config/firebase-config";
 import { collection, addDoc, doc, Timestamp } from "firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
-import {
-  cloudinaryUploadUrl,
-  uploadPreset,
-} from "../../../../cloudinary-config/cloudinary-config";
 import "./addbook.css";
 
 interface FormData {
@@ -113,9 +109,9 @@ const Page: React.FC = () => {
       for (const file of formData.uploadedImages) {
         const formDataUpload = new FormData();
         formDataUpload.append("file", file);
-        formDataUpload.append("upload_preset", uploadPreset);
+        //formDataUpload.append("upload_preset", uploadPreset);
 
-        const response = await fetch(cloudinaryUploadUrl, {
+      /*  const response = await fetch(cloudinaryUploadUrl, {
           method: "POST",
           body: formDataUpload,
         });
@@ -124,6 +120,7 @@ const Page: React.FC = () => {
         if (data.secure_url) {
           imageUrls.push(data.secure_url);
         }
+          */
       }
 
       // Generate a unique ID for the book

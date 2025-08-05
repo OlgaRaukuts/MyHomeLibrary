@@ -4,7 +4,6 @@ import './aboutus.css';
 import Image from "next/image";
 import MenuBar from '../../components/header/header';
 import Footer from '../../components/footer/footer'
-import Review from "../../components/review/review";
 const aboutus = () => {
 
   const [reviews, setReviews] = useState([
@@ -114,16 +113,6 @@ const aboutus = () => {
             <div style={{ color: "#F4AD0F" }}>SAY....</div>
           </h1>
           <img src="/review.png" alt="reviews" />
-        </div>
-        <div className="AllReviewsContainer">
-          {reviews.map((review, index) => (
-            <Review
-              key={index}
-              review={review.review}
-              name={review.name}
-              type={review.type}
-            />
-          ))}
         </div>
       </section>
 
