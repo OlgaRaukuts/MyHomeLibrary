@@ -10,7 +10,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="MenuContainer">
+      <header className="MenuContainer">
         <Link href="/">
           <img src="/headerImg.png" alt="Logo" className="headerlogo" />
         </Link>
@@ -23,14 +23,14 @@ const Header = () => {
               <Link href="/BrowsePage">BROWSE</Link>
             </li>
             <li>
-              <Link href="/ContactUS">MY BOOKS</Link>
+              <Link href="/MyBooks">MY BOOKS</Link>
             </li>
           </ul>
         </nav>
         <button className="menu-toggle" onClick={toggleMenu}>
           <img src="/menu-icon.svg" alt="Menu" />
         </button>
-      </div>
+      </header>
     </>
   );
 };
