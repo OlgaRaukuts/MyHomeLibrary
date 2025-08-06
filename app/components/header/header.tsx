@@ -1,44 +1,29 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from 'next/link';
 import "./header.css";
-import LoadingScreen from "../../components/loadingscreen/loadingscreen";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen); 
-  };
-
-  const handleNavigation = (path: string) => {
-    setLoading(true); //Обычно это используется, чтобы показать спиннер или индикатор загрузки на экране.
-    setTimeout(() => {
-      router.push(path); //выполняет переход на новую страницу по указанному маршруту path.
-      setLoading(false);
-    }, 3000);
-  };
+  
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
     <>
-      {loading && <LoadingScreen />}
       <div className="MenuContainer">
-        <a href="/">
+        <Link href="/">
           <img src="/headerImg.png" alt="Logo" className="headerlogo" />
-        </a>
-        <nav className={`top-nav ${menuOpen ? "open" : ""}`}> 
+        </Link>
+        <nav className={`top-nav ${menuOpen ? "open" : ""}`}>
           <ul>
             <li>
-              <a href="/">HOME</a>
+              <Link href="/">HOME</Link>
             </li>
             <li>
-              <a href="/pages/BrowsePage">BROWSE</a>
+              <Link href="/BrowsePage">BROWSE</Link>
             </li>
             <li>
-              <a href="/pages/ContactUS">MY BOOKS</a>
+              <Link href="/ContactUS">MY BOOKS</Link>
             </li>
           </ul>
         </nav>

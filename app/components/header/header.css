@@ -4,7 +4,7 @@
     background-color: white;
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(7px); /* Blurs the background */
-    height: 50px;
+    height: 80px;
     border-radius: 90px;
     align-content: center;
     padding-left: 20px;
@@ -14,7 +14,7 @@
 
 .MenuContainer .headerlogo {
     padding-top: 8px;
-    height: 35px;
+    height: 55px;
 }
 
 .MenuContainer .top-nav {
