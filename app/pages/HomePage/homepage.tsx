@@ -2,10 +2,10 @@
 import "./homepage.css";
 import React, { useEffect, useState } from "react";
 import Category from "../../components/category/category";
-import BookBox from "../../components/bookbox/bookbox";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config/firebase-config";
 import Link from "next/link";
+import Search from "../../components/search/search";
 
 interface BookItem {
   id: string;
@@ -24,30 +24,7 @@ interface BookItem {
 
 const Homepage = () => {
   const [books, setBooks] = useState<BookItem[]>([]);
-  const [reviews, setReviews] = useState([
-    {
-      review:
-        "I love how easy it was to find the books I needed for my college classes. The filters helped me narrow down my search quickly, and I got them at half the price of new ones!",
-      name: "Sarah K.",
-      type: "(buyer)",
-    },
-    {
-      review: "Great experience selling my books here. Super easy and fast!",
-      name: "David R.",
-      type: "(seller)",
-    },
-    {
-      review:
-        "I love how easy it was to find the books I needed for my college classes. The filters helped me narrow down my search quickly, and I got them at half the price of new ones!",
-      name: "Sarah K.",
-      type: "(buyer)",
-    },
-    {
-      review: "Great experience selling my books here. Super easy and fast!",
-      name: "David R.",
-      type: "(seller)",
-    },
-  ]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -60,7 +37,6 @@ const Homepage = () => {
           .sort(
             (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
           );
-
         setBooks(booksData);
       } catch (error) {
         console.error("Error fetching books:", error);
@@ -69,6 +45,10 @@ const Homepage = () => {
 
     fetchBooks();
   }, []);
+  const filteredBooks = books.filter((book) =>
+    book.book.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
 
   return (
     <>
@@ -134,35 +114,38 @@ const Homepage = () => {
         </div>
       </div>
 
-      <div className="section3">
-        <div className="ChooseUsSection">
-          <img src="/booksimage.png" alt="why choose us" />
-          <div className="chooseinfo">
-            <h1 style={{ display: "flex" }}>
-              <div style={{ color: "#643887" }}>WHY CHOOSE </div>
-              <div style={{ color: "#F4AD0F" }}>US?</div>
-            </h1>
-            <div className="choosepointss">
-              {Array(5)
-                .fill(0)
-                .map((_, index) => (
-                  <div className="choosepoints" key={index}>
-                    <div className="point">
-                      <img src="/list.svg" alt="point" />
-                      <div className="pointtext">
-                        <p style={{ fontWeight: "bold" }}>MODERATE LISTING</p>
-                        <p style={{ width: "400px", lineHeight: "20px" }}>
-                          Every book is verified for quality and authenticity
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
+      {/* 🔍 SEARCH INPUT */}
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <Search value={searchQuery} onChange={setSearchQuery} />
+      </div>
+
+      {/* 📚 BOOK LIST */}
+      <div className="BookListSection">
+        <h2 style={{ textAlign: "center", margin: "20px 0" }}>Latest Books</h2>
+        <div className="BooksGrid">
+          {filteredBooks.length > 0 ? (
+            filteredBooks.map((book) => (
+              <div className="BookCard" key={book.id}>
+                <img
+                  src={book.uploadedImages?.[0] || "/book-default.jpg"}
+                  alt={book.book}
+                  className="BookImage"
+                />
+                <h3>{book.book}</h3>
+                <p>by {book.author}</p>
+                <p><b>€{book.price}</b></p>
+                <Link href={`/pages/Book/${book.id}`}>View</Link>
+              </div>
+            ))
+          ) : (
+            <p style={{ textAlign: "center", marginTop: "20px" }}>
+              No books found.
+            </p>
+          )}
         </div>
       </div>
 
+      {/* 📦 HOW IT WORKS */}
       <section className="section4info">
         <div className="informationbox">
           <div className="information">
@@ -207,45 +190,6 @@ const Homepage = () => {
               <p>Confirm the deal and enjoy your book!</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section>
-        <h1 style={{ display: "flex" }} className="name">
-          <div style={{ color: "#643887" }}>FEATURED&nbsp;</div>
-          <div style={{ color: "#F4AD0F" }}>LISTING</div>
-        </h1>
-        <div className="booksboxsection">
-          {books.map((book, index) => (
-            <Link
-              key={index}
-              href={`/pages/${book.bid}/ProductPage`}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <BookBox
-                image={book.uploadedImages?.[0] || "/default.jpg"}
-                heading={book.book}
-                price={`Rs.${book.price}/=`}
-                author={book.author}
-                condition={book.condition}
-              />
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="ReviewsBox">
-        <div>
-          <h1 className="headingreview">
-            <div style={{ color: "#643887" }}>
-              SEE WHAT OUR <br />
-            </div>
-            <div style={{ color: "#F4AD0F" }}>
-              BUYERS & SELLERS <br />
-            </div>
-            <div style={{ color: "#F4AD0F" }}>SAY....</div>
-          </h1>
-          <img src="/review.png" alt="reviews" />
         </div>
       </section>
     </>
