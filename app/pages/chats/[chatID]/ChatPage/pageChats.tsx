@@ -13,7 +13,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import "./chatstyle.css";
 import Header from "../../../../components/header/header";
 import Footer from "../../../../components/footer/footer";
-import Contact from "../../../../components/contactelement/contactelement";
 
 interface ContactType {
   chatId: string;
@@ -96,13 +95,7 @@ const BuyerChatPage = () => {
                 onClick={() => setSelectedChat(chat)}
                 className="contactRow"
               >
-                <Contact
-                  name={chat.name}
-                  profilePic={chat.profilePic}
-                  isOnline={true}
-                  lastMessage={chat.lastMessage}
-                  lastMessageTime={formatTime(chat.lastMessageTime)}
-                />
+   
               </div>
             ))
           ) : (

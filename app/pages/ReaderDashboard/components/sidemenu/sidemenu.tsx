@@ -5,7 +5,6 @@ import { useAuth } from "../../../../context/authContext";
 import { auth } from "../../../../firebase-config/firebase-config"; // Firebase Auth
 import { signOut } from "firebase/auth"; // Firebase SignOut function
 import "./sidemenu.css";
-import LoadingScreen from "../../../../components/loadingscreen/loadingscreen"; // Import Loading Screen Component
 import { useRouter } from "next/navigation"; // Next.js Router
 
 const SideMenu = () => {
@@ -40,7 +39,6 @@ const SideMenu = () => {
 
   return (
     <>
-      {loading && <LoadingScreen />} {/* Show loading screen when loading */}
       <div className="sidemenucontainer">
         <button
           onClick={() =>
