@@ -3,7 +3,6 @@ import React, { useState, useEffect} from "react";
 import "./browsepage.css";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
-import BookBox from "../../components/bookbox/bookbox";
 import { db } from "../../firebase-config/firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import Link from "next/link";
@@ -195,14 +194,6 @@ const BrowsePageContent: React.FC = () => {
                   href={`/pages/${book.bid}/ProductPage`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
-                  <BookBox
-                    image={book.uploadedImages?.[0] || "/default.jpg"}
-                    heading={book.book}
-                    price={`Rs.${book.price}/=`}
-                    author={book.author}
-                    condition={book.condition}
-                    onClick={() => {}} // required prop fallback
-                  />
                 </Link>
               </div>
             ))

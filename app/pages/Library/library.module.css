@@ -1,7 +1,7 @@
-main{
+.main{
     padding: 10px 30px;
 }
-addBookForm{
+.addBookForm{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,7 @@ addBookForm{
     gap: 12px;
 }
 
-button{
+.button{
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     border-radius: 6px;
     border: none;
@@ -19,16 +19,16 @@ button{
     width: 100px;
 }
 
-ulBooksList {
+.ulBooksList {
     margin-bottom: 48px;
 }
 
-ulBooksListLi {
+.ulBooksListLi {
     color: #475467;
     line-height: 28px;
 }
 
-container {
+.container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -37,13 +37,13 @@ container {
     padding: 10px 28px;
 }
 
-h3 {
+.h3 {
     font-size: 1.125rem;
     font-weight: 500;
     line-height: 24px;
 }
 
-p {
+.p {
     color: #042362;
     font-size: 1rem;
     line-height: 20px;
