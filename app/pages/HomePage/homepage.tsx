@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config/firebase-config";
 import Library from "../Library/Library";
-import Search from "../../components/search/Search";
+import AddBook from "../AddBook/AddBook";
 
 
 interface BookItem {
@@ -54,7 +54,7 @@ const Homepage = () => {
     <>
       {/* 📚 BOOK LIST */}
       <div className="BookListSection">
-        <Library></Library>
+        <AddBook></AddBook>
       </div>
     </>
   );

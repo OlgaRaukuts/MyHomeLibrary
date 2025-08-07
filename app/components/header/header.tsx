@@ -23,7 +23,7 @@ const Header = () => {
               <Link href="/BrowsePage">BROWSE</Link>
             </li>
             <li>
-              <Link href="/MyBooks">MY BOOKS</Link>
+              <Link href="/pages/Library">MY BOOKS</Link>
             </li>
           </ul>
         </nav>

@@ -1,24 +1,38 @@
-.main{
-    padding: 10px 30px;
-}
-.addBookForm{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 38px;
-    gap: 12px;
-}
-
-.button{
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    border-radius: 6px;
-    border: none;
-    background-color: #F4631E;
-    color: black;
-    height: 40px;
-    width: 100px;
+.input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 16px;
 }
 
+.button {
+  padding: 10px 16px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.addBookForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
 .ulBooksList {
     margin-bottom: 48px;
 }
