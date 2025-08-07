@@ -17,13 +17,13 @@ const Header = () => {
         <nav className={`top-nav ${menuOpen ? "open" : ""}`}>
           <ul>
             <li>
-              <Link href="/">HOME</Link>
+              <Link href="/HomePage">HOME</Link>
             </li>
             <li>
               <Link href="/BrowsePage">BROWSE</Link>
             </li>
             <li>
-              <Link href="/pages/Library">MY BOOKS</Link>
+              <Link href="/library">MY BOOKS</Link>
             </li>
           </ul>
         </nav>
