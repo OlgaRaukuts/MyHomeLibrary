@@ -67,3 +67,9 @@
   color: #0070f3; 
   font-size: 1.2rem;
 }
+.confirmation {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+  animation: fadeInOut 3s ease forwards;
+}

@@ -14,10 +14,15 @@ interface BookFormData {
 export default function Library() {
   const [books, setBooks] = useState<BookFormData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [confirmation, setConfirmation] = useState<string|null>(null);
 
   const handleAddBook = (event: FormEvent<HTMLFormElement>, newBook: BookFormData) => {
     setBooks((prev) => [...prev, newBook]);
+    setConfirmation(`"${newBook.title}" by ${newBook.author} added successfully!`);
+    setTimeout(() => setConfirmation(null), 3000);
   };
+
+  
 
   const totalBooks = books.length;
   const recentBooks = [...books].slice(-5).reverse();
@@ -31,7 +36,7 @@ export default function Library() {
     <main className={styles.libraryMain}>
       <h1>Books in My Library</h1>
       <AddBook onSubmit={handleAddBook} />
-
+      {confirmation && <p className={styles.confirmation}>{confirmation}</p>}
       {books.length > 0 && (
         <section className={styles.booksSection}>
           <Search value={searchQuery} onChange={setSearchQuery} />
