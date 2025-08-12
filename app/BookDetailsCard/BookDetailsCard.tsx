@@ -2,6 +2,7 @@ import React from "react";
 import styles from './BookDetailsCard.module.css';
 
 export type Book = {
+id: string;
 title: string;
 author: string;
 year?: number | null;

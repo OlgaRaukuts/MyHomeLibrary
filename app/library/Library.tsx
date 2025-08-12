@@ -1,5 +1,6 @@
 'use client';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
+import Link from 'next/link';
 import styles from '../Library/library.module.css';
 import Search from "../components/search/Search";
 import AddBook from '../AddBook/AddBook';
@@ -18,25 +19,45 @@ export default function Library() {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmation, setConfirmation] = useState<string|null>(null);
 
+  useEffect(() => { //Load saved books on first render
+    const savedBooks = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
+    setBooks(savedBooks);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('libraryBooks', JSON.stringify(books));
+  }, [books]);
+
   const handleAddBook = (event: FormEvent<HTMLFormElement>, newBook: BookFormData) => {
-     setBooks((prev) => [
-      ...prev,
-      {
-        title: newBook.title,
-        author: newBook.author,
-        year: newBook.year ? Number(newBook.year) : undefined,
-        dateAdded: new Date(),
-        description: newBook.description || '',
-      },
-    ]);
+     const bookWithId: Book = {
+    id: crypto.randomUUID(),
+    title: newBook.title,
+    author: newBook.author,
+    year: newBook.year ? Number(newBook.year) : undefined,
+    dateAdded: new Date(),
+    description: newBook.description || '',
+  };
+
+  setBooks((prev) => [...prev, bookWithId]);
     setConfirmation(`"${newBook.title}" by ${newBook.author} added successfully!`);
     setTimeout(() => setConfirmation(null), 3000);
   };
 
   const totalBooks = books.length;
-  const recentBooks = [...books].slice(-5).reverse();
+
+  // Sort by dateAdded (newest first)
+  const sortedBooks = [...books].sort(
+    (a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
+  ); 
+
+  const recentBooks = sortedBooks.slice(0, 5);
 
   const filteredRecentBooks = recentBooks.filter((book) =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+   const filteredAllBooks = sortedBooks.filter((book) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -50,11 +71,22 @@ export default function Library() {
       {books.length > 0 && (
         <section className={styles.booksSection}>
           <Search value={searchQuery} onChange={setSearchQuery} />
-
+ {/* Recent Books */}
           <h2>5 Most Recently Added</h2>
           <div className={styles.booksGrid}>
-            {filteredRecentBooks.map((book, index) => (
-              <BookDetailsCard key={index} book={book} />
+            {filteredRecentBooks.map((book) => (
+              <Link key={book.id} href={`/library/${book.id}`}>
+                <BookDetailsCard book={book} />
+              </Link>
+            ))}
+          </div>
+{/* All Books */}
+          <h2>All Books</h2>
+          <div className={styles.booksGrid}>
+            {filteredAllBooks.map((book) => (
+              <Link key={book.id} href={`/library/${book.id}`}>
+                <BookDetailsCard book={book} />
+              </Link>
             ))}
           </div>
 
