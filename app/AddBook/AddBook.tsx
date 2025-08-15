@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import styles from '../Library/library.module.css';
+import styles from '../styles/Library.module.css';
 
 interface BookFormData {
   title: string;

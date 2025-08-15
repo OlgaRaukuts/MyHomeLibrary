@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import styles from '../search/Search.module.css';
+import styles from '../../styles/Search.module.css';
 
 interface SearchProps {
   value: string;
