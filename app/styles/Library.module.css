@@ -73,3 +73,60 @@
   margin-top: 10px;
   animation: fadeInOut 3s ease forwards;
 }
+.sectionTitle {
+  margin-top: 32px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #042362;
+}
+
+.booksTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden; /* keeps header corners rounded */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.booksTable th,
+.booksTable td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.booksTable th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.booksTable td {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.booksTable tr:hover {
+  background-color: #f3f4f6;
+}
+
+.bookLink {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.bookLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .booksTable {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
