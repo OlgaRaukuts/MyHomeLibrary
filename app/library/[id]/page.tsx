@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import styles from '../../../styles/Library.module.css';
-import { Book } from '../../../BookDetailsCard/BookDetailsCard';
+import styles from '../../styles/Library.module.css';
+import { Book } from '../../BookDetailsCard/BookDetailsCard';
 
 export default function BookDetailPage() {
   const { id } = useParams();

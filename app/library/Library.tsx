@@ -82,13 +82,30 @@ export default function Library() {
           </div>
 {/* All Books */}
           <h2>All Books</h2>
-          <div className={styles.booksGrid}>
-            {filteredAllBooks.map((book) => (
-              <Link key={book.id} href={`/library/${book.id}`}>
-                <BookDetailsCard book={book} />
-              </Link>
-            ))}
-          </div>
+          <table className={styles.booksTable}>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Date Added</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAllBooks.map((book) => (
+                <tr key={book.id}>
+                  <td>
+                    <Link href={`/library/${book.id}`}>
+                      {book.title}
+                    </Link>
+                  </td>
+                  <td>{book.author}</td>
+                  <td>{book.year || '—'}</td>
+                  <td>{new Date(book.dateAdded).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
           {totalBooks > 3 && (
             <div className={styles.container}>
