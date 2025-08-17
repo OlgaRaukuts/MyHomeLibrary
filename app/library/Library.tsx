@@ -21,8 +21,8 @@ export default function Library() {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmation, setConfirmation] = useState<string|null>(null);
   const [sortOption, setSortOption] = useState<SortOption>("dateNewest");
-  const [authorFilter, setAuthorFilter] = useEffect<string>("all");
-  const [yearFilter, setYearFilter] = useEffect<string>("all");
+  const [authorFilter, setAuthorFilter] = useState<string>("all");
+  const [yearFilter, setYearFilter] = useState<string>("all");
 
   useEffect(() => { //Load saved books on first render
     const savedBooks = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
@@ -149,7 +149,7 @@ export default function Library() {
           </div>
 
  {/* Recent Books */}
- 
+
           <h2>5 Most Recently Added</h2>
           <div className={styles.booksGrid}>
             {filteredRecentBooks.map((book) => (
