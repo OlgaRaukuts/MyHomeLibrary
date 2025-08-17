@@ -13,11 +13,15 @@ interface BookFormData {
   year?: string;
   description?: string;
 }
+type SortOption = "titleAZ" | "titleZA" | "dateNewest" | "dateOldest";
+
 
 export default function Library() {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmation, setConfirmation] = useState<string|null>(null);
+  const [sortOption, setSortOption] = useState<SortOption>("dateNewest");
+
 
   useEffect(() => { //Load saved books on first render
     const savedBooks = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
@@ -46,9 +50,19 @@ export default function Library() {
   const totalBooks = books.length;
 
   // Sort by dateAdded (newest first)
-  const sortedBooks = [...books].sort(
-    (a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
-  ); 
+  const sortedBooks = [...books].sort((a, b) => {
+    switch (sortOption){
+      case "titleAZ":
+        return a.title.localeCompare(b.title);
+      case "titleZA":
+      return b.title.localeCompare(a.title);
+      case "dateOldest":
+        return new Date(a.dateAdded).getTime() - new Date(b.dateAdded).getTime();
+      case "dateNewest":
+        default:
+        return new Date(b.dateAdded ?? 0).getTime() - new Date(a.dateAdded ?? 0).getTime();
+    }
+  }); 
 
   const recentBooks = sortedBooks.slice(0, 5);
 
