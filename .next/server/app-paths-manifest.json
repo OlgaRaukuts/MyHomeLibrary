@@ -1,8 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/BrowsePage/page": "app/BrowsePage/page.js",
-  "/page": "app/page.js",
   "/HomePage/page": "app/HomePage/page.js",
   "/library/[id]/page": "app/library/[id]/page.js",
-  "/library/page": "app/library/page.js"
+  "/library/page": "app/library/page.js",
+  "/BrowsePage/page": "app/BrowsePage/page.js",
+  "/page": "app/page.js"
 }
