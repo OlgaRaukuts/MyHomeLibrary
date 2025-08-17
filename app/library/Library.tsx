@@ -21,7 +21,8 @@ export default function Library() {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmation, setConfirmation] = useState<string|null>(null);
   const [sortOption, setSortOption] = useState<SortOption>("dateNewest");
-
+  const [authorFilter, setAuthorFilter] = useEffect<string>("all");
+  const [yearFilter, setYearFilter] = useEffect<string>("all");
 
   useEffect(() => { //Load saved books on first render
     const savedBooks = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
@@ -63,6 +64,21 @@ export default function Library() {
         return new Date(b.dateAdded ?? 0).getTime() - new Date(a.dateAdded ?? 0).getTime();
     }
   }); 
+  const authors = Array.from(new Set(books.map((b) => b.author))).sort();
+  const years = Array.from(
+  new Set(books.map((b) => b.year).filter((y): y is number => y != null))).sort((a, b) => a - b);
+
+    // Apply search + filters
+  const filteredAllBooks = sortedBooks.filter((book) => {
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesAuthor = authorFilter === "all" || book.author === authorFilter;
+    const matchesYear = yearFilter === "all" || String(book.year) === yearFilter;
+
+    return matchesSearch && matchesAuthor && matchesYear;
+  });
 
   const recentBooks = sortedBooks.slice(0, 5);
 
@@ -71,10 +87,6 @@ export default function Library() {
     book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-   const filteredAllBooks = sortedBooks.filter((book) =>
-    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
    <main className={styles.libraryMain}>
@@ -85,21 +97,59 @@ export default function Library() {
       {books.length > 0 && (
         <section className={styles.booksSection}>
           <Search value={searchQuery} onChange={setSearchQuery} />
- {/*Sorting Dropdown */}
-   <div className={styles.sortContainer}>
-            <label htmlFor="sort">Sort by: </label>
-            <select
-              id="sort"
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value as SortOption)}
-            >
-              <option value="titleAZ">Title (A → Z)</option>
-              <option value="titleZA">Title (Z → A)</option>
-              <option value="dateNewest">Date Added (Newest)</option>
-              <option value="dateOldest">Date Added (Oldest)</option>
-            </select>
+
+ {/*Sorting Dropdown + filters*/}
+
+          <div className={styles.controls}>
+            <div>
+              <label htmlFor="sort">Sort by: </label>
+              <select
+                id="sort"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value as SortOption)}
+              >
+                <option value="titleAZ">Title (A → Z)</option>
+                <option value="titleZA">Title (Z → A)</option>
+                <option value="dateNewest">Date Added (Newest)</option>
+                <option value="dateOldest">Date Added (Oldest)</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="authorFilter">Author: </label>
+              <select
+                id="authorFilter"
+                value={authorFilter}
+                onChange={(e) => setAuthorFilter(e.target.value)}
+              >
+                <option value="all">All</option>
+                {authors.map((author) => (
+                  <option key={author} value={author}>
+                    {author}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="yearFilter">Year: </label>
+              <select
+                id="yearFilter"
+                value={yearFilter}
+                onChange={(e) => setYearFilter(e.target.value)}
+              >
+                <option value="all">All</option>
+                {years.map((year) => (
+                  <option key={year} value={String(year)}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+
  {/* Recent Books */}
+ 
           <h2>5 Most Recently Added</h2>
           <div className={styles.booksGrid}>
             {filteredRecentBooks.map((book) => (
