@@ -85,6 +85,20 @@ export default function Library() {
       {books.length > 0 && (
         <section className={styles.booksSection}>
           <Search value={searchQuery} onChange={setSearchQuery} />
+ {/*Sorting Dropdown */}
+   <div className={styles.sortContainer}>
+            <label htmlFor="sort">Sort by: </label>
+            <select
+              id="sort"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value as SortOption)}
+            >
+              <option value="titleAZ">Title (A → Z)</option>
+              <option value="titleZA">Title (Z → A)</option>
+              <option value="dateNewest">Date Added (Newest)</option>
+              <option value="dateOldest">Date Added (Oldest)</option>
+            </select>
+          </div>
  {/* Recent Books */}
           <h2>5 Most Recently Added</h2>
           <div className={styles.booksGrid}>
