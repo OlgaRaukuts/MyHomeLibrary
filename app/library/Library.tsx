@@ -1,10 +1,10 @@
 'use client';
 import { useState, FormEvent, useEffect } from 'react';
 import Link from 'next/link';
-import styles from '../styles/Library.module.css';
+import styles from '@styles/Library.module.css';
 import Search from "@components/search/Search"; 
-import AddBook from '../AddBook/AddBook';
-import BookDetailsCard, {Book} from '../BookDetailsCard/BookDetailsCard';
+import AddBook from "@addbook/AddBook";
+import BookDetailsCard, { Book } from "@bookdetails/BookDetailsCard";
 
 interface BookFormData {
   title: string;

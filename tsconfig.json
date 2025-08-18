@@ -17,7 +17,10 @@
       "@components/*": ["components/*"],
       "@library/*": ["library/*"],
       "@hooks/*": ["hooks/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@addbook/*": ["AddBook/*"],
+      "@bookdetails/*": ["BookDetailsCard/*"]
     },
     "incremental": true,
     "plugins": [
