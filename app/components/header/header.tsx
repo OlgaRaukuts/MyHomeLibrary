@@ -20,9 +20,6 @@ const Header = () => {
               <Link href="/HomePage">HOME</Link>
             </li>
             <li>
-              <Link href="/BrowsePage">BROWSE</Link>
-            </li>
-            <li>
               <Link href="/library">MY BOOKS</Link>
             </li>
           </ul>
