@@ -2,7 +2,7 @@
 import { useState, FormEvent, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../styles/Library.module.css';
-import Search from "../components/search/Search"; 
+import Search from "@components/search/Search"; 
 import AddBook from '../AddBook/AddBook';
 import BookDetailsCard, {Book} from '../BookDetailsCard/BookDetailsCard';
 
