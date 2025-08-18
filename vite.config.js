@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react'; // если используешь React
+import react from '@vitejs/plugin-react'; // если React
 
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'dist',  // Единственная папка для сборки
+    outDir: 'dist', // папка, которая будет создана при сборке
   },
-  base: '/', // Базовый путь для Firebase Hosting
+  base: '/',
 });
