@@ -1,48 +1,49 @@
 import React from "react";
 import Link from "next/link";
-import "./footer.css";
 
 const Footer = () => {
   return (
-    <>
-      <footer className="FooterContainer">
-        <div className="BookInfo">
-          <img src="/footerImage.png" alt="footerImage" className="footerImage"></img>
-          <p className="about">
-            Home Library is resource for putting all your books you have at home in one place. To track, 
-            to gather and to evaluate/estimate your books! 
+    <footer className="bg-base-100 text-gray-800 p-8 mt-8">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-8">
+        {/* Левая колонка: Информация о проекте */}
+        <div className="flex-1">
+          <img src="/footerImage.png" alt="footerImage" className="h-24 mb-4" />
+          <p className="mb-4">
+            Home Library is a resource for putting all your books you have at home in one place. 
+            To track, gather and evaluate your books!
           </p>
-          <p className="contactf">
-            <b style={{ color: "#F4AD0F" }}>Email:</b> support@HomeLibrary.com
-            <br />
-            <b style={{ color: "#F4AD0F" }}>Phone:</b> +31645
-            <br />
-            <b style={{ color: "#F4AD0F" }}>Address:</b> Haarlem, The Netherlands
-            <br />
+          <p className="mb-2">
+            <b className="text-yellow-500">Email:</b> support@HomeLibrary.com
           </p>
-
-          <p className="reserve">All rights reserved @HomeLibrary 2024</p>
+          <p className="mb-2">
+            <b className="text-yellow-500">Phone:</b> +31645
+          </p>
+          <p className="mb-2">
+            <b className="text-yellow-500">Address:</b> Haarlem, The Netherlands
+          </p>
+          <p className="mt-4 text-sm">All rights reserved @HomeLibrary 2024</p>
         </div>
 
-        <div className="Links">
-          <h5 style={{ color: "#F4AD0F" }}>Quick Links</h5>
-          <ul>
+        {/* Правая колонка: Быстрые ссылки */}
+        <div className="flex-1">
+          <h5 className="text-yellow-500 mb-4 text-lg font-semibold">Quick Links</h5>
+          <ul className="space-y-2">
             <li>
-              <Link href="/">Home</Link>
+              <Link href="/" className="hover:text-primary">Home</Link>
             </li>
             <li>
-              <Link href="/BrowsePage">Browse</Link>
-            </li>
-              <li>
-              <Link href="/MyBooks">My Books</Link>
+              <Link href="/BrowsePage" className="hover:text-primary">Browse</Link>
             </li>
             <li>
-              <Link href="/ContactUs">Contact Us</Link>
+              <Link href="/MyBooks" className="hover:text-primary">My Books</Link>
+            </li>
+            <li>
+              <Link href="/ContactUs" className="hover:text-primary">Contact Us</Link>
             </li>
           </ul>
         </div>
-      </footer>
-    </>
+      </div>
+    </footer>
   );
 };
 
