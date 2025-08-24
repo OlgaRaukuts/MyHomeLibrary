@@ -32,13 +32,7 @@ const Footer = () => {
               <Link href="/" className="hover:text-primary">Home</Link>
             </li>
             <li>
-              <Link href="/BrowsePage" className="hover:text-primary">Browse</Link>
-            </li>
-            <li>
               <Link href="/MyBooks" className="hover:text-primary">My Books</Link>
-            </li>
-            <li>
-              <Link href="/ContactUs" className="hover:text-primary">Contact Us</Link>
             </li>
           </ul>
         </div>
