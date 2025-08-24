@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Book } from "../../BookDetailsCard/BookDetailsCard";
@@ -14,9 +14,7 @@ export default function BookDetailClient() {
     setBook(foundBook || null);
   }, [id]);
 
-  if (!book) {
-    return <p className="text-red-600 text-center mt-8">Book not found.</p>;
-  }
+  if (!book) return <p className="text-red-600 text-center mt-8">Book not found.</p>;
 
   return (
     <main className="p-8 max-w-3xl mx-auto space-y-4">

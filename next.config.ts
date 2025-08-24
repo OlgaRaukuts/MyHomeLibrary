@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+//  output: 'export',
   // если нужен basePath или assetPrefix для Firebase, сюда тоже
 };
 
