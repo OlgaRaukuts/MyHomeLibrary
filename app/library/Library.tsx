@@ -38,22 +38,21 @@ export default function Library() {
     fetchBooks();
   }, []);
 
-  const handleAddBook = async (event: FormEvent<HTMLFormElement>, newBook: BookFormData) => {
-    event.preventDefault();
-    const bookWithDate = {
-      title: newBook.title,
-      author: newBook.author,
-      year: newBook.year ? Number(newBook.year) : undefined,
-      description: newBook.description || "",
-      dateAdded: new Date()
-    };
-
-    // Add to Firestore
-    const docRef = await addDoc(collection(db, "books"), bookWithDate);
-    setBooks((prev) => [...prev, { id: docRef.id, ...bookWithDate }]);
-    setConfirmation(`"${newBook.title}" by ${newBook.author} added successfully!`);
-    setTimeout(() => setConfirmation(null), 3000);
+const handleAddBook = async (newBook: BookFormData) => {
+  const bookWithDate = {
+    title: newBook.title,
+    author: newBook.author,
+    year: newBook.year ? Number(newBook.year) : undefined,
+    description: newBook.description || "",
+    dateAdded: new Date()
   };
+
+  // Add to Firestore
+  const docRef = await addDoc(collection(db, "books"), bookWithDate);
+  setBooks((prev) => [...prev, { id: docRef.id, ...bookWithDate }]);
+  setConfirmation(`"${newBook.title}" by ${newBook.author} added successfully!`);
+  setTimeout(() => setConfirmation(null), 3000);
+};
 
   // Sorting and filtering
   const sortedBooks = [...books].sort((a, b) => {

@@ -4,15 +4,19 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../app/firebase-config/firebase-config"; // adjust path if needed
 
-interface BookFormData {
+export interface BookFormData {
   title: string;
   author: string;
   isbn?: string;
-  year?: string;
+  year?: string; // keep string for form input
   description?: string;
 }
 
-export default function AddBook() {
+interface AddBookProps {
+  onSubmit?: (newBook: BookFormData) => void | Promise<void>;
+}
+
+export default function AddBook({ onSubmit }: AddBookProps) {
   const [formData, setFormData] = useState<BookFormData>({
     title: "",
     author: "",
@@ -36,17 +40,18 @@ export default function AddBook() {
     }
 
     try {
-      const bookToAdd = {
-        title: formData.title,
-        author: formData.author,
-        isbn: formData.isbn || undefined,
+      // Prepare book object for Firestore
+      const bookForFirestore = {
+        ...formData,
         year: formData.year ? Number(formData.year) : undefined,
-        description: formData.description || undefined,
         dateAdded: new Date(),
       };
 
-      // Add book to Firestore
-      await addDoc(collection(db, "books"), bookToAdd);
+      // Save to Firestore
+      await addDoc(collection(db, "books"), bookForFirestore);
+
+      // Call parent callback with string year
+      if (onSubmit) await onSubmit(formData);
 
       setConfirmation(`"${formData.title}" by ${formData.author} added successfully!`);
       setTimeout(() => setConfirmation(null), 3000);
