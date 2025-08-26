@@ -122,7 +122,8 @@ export default function Library() {
             {totalBooks>0 && (
               <div className="mt-6 bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold">TOTAL</h3>
-                <p>You have <span className="font-bold">{totalBooks}</span> book{totalBooks!==1?'s':''} in total.</p>
+                <p data-testid="total-books">
+               You have <span className="font-bold">{books.length}</span> book{books.length !== 1 && 's'} in total.</p>
               </div>
             )}
           </div>

@@ -5,12 +5,8 @@ import { db } from "../firebase-config/firebase-config";
 
 interface BookItem {
   id: string;
-  bid: string;
   book: string;
-  price: string;
   author: string;
-  condition: string;
-  uploadedImages: string[];
   createdAt?: { seconds: number; nanoseconds: number };
   moderationStatus: string;
 }
@@ -53,7 +49,7 @@ const Homepage = () => {
       <ul className="space-y-3">
         {filteredBooks.map((book) => (
           <li key={book.id} className="p-4 border rounded-lg hover:shadow-md transition">
-            <strong className="text-lg">{book.book}</strong> by {book.author} — <span className="font-semibold">{book.price}€</span>
+            <strong className="text-lg">{book.book}</strong> by {book.author}
           </li>
         ))}
       </ul>
