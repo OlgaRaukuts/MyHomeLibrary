@@ -4,8 +4,16 @@ import Link from "next/link";
 import Search from "../components/search/Search"; 
 import AddBook from "../AddBook/AddBook";
 import BookDetailsCard, { Book } from '../BookDetailsCard/BookDetailsCard';
+import { collection, addDoc, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "../../app/firebase-config/firebase-config";
 
-interface BookFormData { title: string; author: string; isbn?: string; year?: string; description?: string; }
+interface BookFormData { 
+  title: string; 
+  author: string; 
+  isbn?: string; 
+  year?: string; 
+  description?: string; 
+}
 type SortOption = "titleAZ" | "titleZA" | "dateNewest" | "dateOldest";
 
 export default function Library() {
@@ -16,22 +24,38 @@ export default function Library() {
   const [authorFilter, setAuthorFilter] = useState<string>("all");
   const [yearFilter, setYearFilter] = useState<string>("all");
 
+  // Fetch books from Firestore on mount
   useEffect(() => {
-    const savedBooks = JSON.parse(localStorage.getItem('libraryBooks') || '[]');
-    setBooks(savedBooks);
+    const fetchBooks = async () => {
+      const q = query(collection(db, "books"), orderBy("dateAdded", "desc"));
+      const querySnapshot = await getDocs(q);
+      const fetchedBooks: Book[] = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Book[];
+      setBooks(fetchedBooks);
+    };
+    fetchBooks();
   }, []);
-  
-  useEffect(() => {
-    localStorage.setItem('libraryBooks', JSON.stringify(books));
-  }, [books]);
 
-  const handleAddBook = (event: FormEvent<HTMLFormElement>, newBook: BookFormData) => {
-    const bookWithId: Book = { id: crypto.randomUUID(), title: newBook.title, author: newBook.author, year: newBook.year ? Number(newBook.year) : undefined, dateAdded: new Date(), description: newBook.description || '' };
-    setBooks((prev) => [...prev, bookWithId]);
+  const handleAddBook = async (event: FormEvent<HTMLFormElement>, newBook: BookFormData) => {
+    event.preventDefault();
+    const bookWithDate = {
+      title: newBook.title,
+      author: newBook.author,
+      year: newBook.year ? Number(newBook.year) : undefined,
+      description: newBook.description || "",
+      dateAdded: new Date()
+    };
+
+    // Add to Firestore
+    const docRef = await addDoc(collection(db, "books"), bookWithDate);
+    setBooks((prev) => [...prev, { id: docRef.id, ...bookWithDate }]);
     setConfirmation(`"${newBook.title}" by ${newBook.author} added successfully!`);
     setTimeout(() => setConfirmation(null), 3000);
   };
 
+  // Sorting and filtering
   const sortedBooks = [...books].sort((a, b) => {
     switch (sortOption) {
       case "titleAZ": return a.title.localeCompare(b.title);
@@ -42,14 +66,16 @@ export default function Library() {
     }
   });
 
-  const authors = Array.from(new Set(books.map((b) => b.author))).sort();
-  const years = Array.from(new Set(books.map((b) => b.year).filter((y): y is number => y != null))).sort((a,b)=>a-b);
+  const authors = Array.from(new Set(books.map(b => b.author))).sort();
+  const years = Array.from(new Set(books.map(b => b.year).filter((y): y is number => y != null))).sort((a,b)=>a-b);
+
   const filteredAllBooks = sortedBooks.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) || book.author.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesAuthor = authorFilter==="all" || book.author===authorFilter;
     const matchesYear = yearFilter==="all" || String(book.year)===yearFilter;
     return matchesSearch && matchesAuthor && matchesYear;
   });
+
   const recentBooks = [...books].sort((a,b)=>new Date(b.dateAdded).getTime()-new Date(a.dateAdded).getTime()).slice(0,5);
   const totalBooks = books.length;
 
@@ -61,7 +87,6 @@ export default function Library() {
 
       {books.length > 0 && (
         <section className="mt-8 space-y-8">
-          {/* Recent Books */}
           <div>
             <h2 className="text-2xl font-semibold mb-4">5 Most Recently Added</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -73,7 +98,6 @@ export default function Library() {
             </div>
           </div>
 
-          {/* All Books */}
           <div>
             <h2 className="text-2xl font-semibold mb-4">All Books</h2>
             <Search value={searchQuery} onChange={setSearchQuery} />
@@ -123,7 +147,8 @@ export default function Library() {
               <div className="mt-6 bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold">TOTAL</h3>
                 <p data-testid="total-books">
-               You have <span className="font-bold">{books.length}</span> book{books.length !== 1 && 's'} in total.</p>
+                  You have <span className="font-bold">{books.length}</span> book{books.length !== 1 && 's'} in total.
+                </p>
               </div>
             )}
           </div>

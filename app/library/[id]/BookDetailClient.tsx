@@ -2,18 +2,43 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Book } from "../../BookDetailsCard/BookDetailsCard";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase-config/firebase-config";
 
 export default function BookDetailClient() {
   const { id } = useParams();
+  const bookId = Array.isArray(id) ? id[0] : id;
+
   const [book, setBook] = useState<Book | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!id) return;
-    const savedBooks: Book[] = JSON.parse(localStorage.getItem("libraryBooks") || "[]");
-    const foundBook = savedBooks.find((b) => b.id === id);
-    setBook(foundBook || null);
-  }, [id]);
+useEffect(() => {
+  if (!bookId) return;
 
+  const fetchBook = async () => {
+    const docRef = doc(db, "books", bookId); // now always a string
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      setBook({
+        id: docSnap.id,
+        title: data.title,
+        author: data.author,
+        year: data.year,
+        description: data.description,
+        dateAdded: data.dateAdded.toDate ? data.dateAdded.toDate() : new Date(data.dateAdded),
+      });
+    } else {
+      setBook(null);
+    }
+    setLoading(false);
+  };
+
+  fetchBook();
+}, [bookId]);
+
+  if (loading) return <p className="text-gray-600 text-center mt-8">Loading...</p>;
   if (!book) return <p className="text-red-600 text-center mt-8">Book not found.</p>;
 
   return (
@@ -28,3 +53,4 @@ export default function BookDetailClient() {
     </main>
   );
 }
+
