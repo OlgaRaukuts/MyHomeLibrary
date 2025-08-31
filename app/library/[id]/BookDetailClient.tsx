@@ -23,11 +23,11 @@ useEffect(() => {
       const data = docSnap.data();
       setBook({
         id: docSnap.id,
-        title: data.title,
-        author: data.author,
+        title: data.title || 'No title',
+        author: data.author || 'Unknown',
         year: data.year,
         description: data.description,
-        dateAdded: data.dateAdded.toDate ? data.dateAdded.toDate() : new Date(data.dateAdded),
+        dateAdded: data.dateAdded && data.dateAdded.toDate ? data.dateAdded.toDate() : new Date(),
       });
     } else {
       setBook(null);

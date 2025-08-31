@@ -7,9 +7,9 @@ import { db } from "../../app/firebase-config/firebase-config"; // adjust path i
 export interface BookFormData {
   title: string;
   author: string;
-  isbn?: string;
-  year?: string; // keep string for form input
-  description?: string;
+  isbn: string;
+  year: string; 
+  description: string;
 }
 
 interface AddBookProps {
@@ -33,35 +33,43 @@ export default function AddBook({ onSubmit }: AddBookProps) {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!formData.title.trim() || !formData.author.trim()) {
-      alert("Please enter at least a title and author.");
-      return;
+  e.preventDefault();
+  if (!formData.title.trim() || !formData.author.trim()) {
+    alert("Please enter at least a title and author.");
+    return;
+  }
+
+  try {
+    const bookForFirestore: any = {
+      title: formData.title.trim(),
+      author: formData.author.trim(),
+      dateAdded: new Date(),
+    };
+
+    if (formData.year.trim() !== "") {
+      const parsedYear = Number(formData.year);
+      if (!isNaN(parsedYear)) bookForFirestore.year = parsedYear;
     }
 
-    try {
-      // Prepare book object for Firestore
-      const bookForFirestore = {
-        ...formData,
-        year: formData.year ? Number(formData.year) : undefined,
-        dateAdded: new Date(),
-      };
+    if (formData.isbn.trim() !== "") bookForFirestore.isbn = formData.isbn.trim();
+    if (formData.description.trim() !== "") bookForFirestore.description = formData.description.trim();
 
-      // Save to Firestore
-      await addDoc(collection(db, "books"), bookForFirestore);
+    console.log("📘 Saving book:", bookForFirestore);
 
-      // Call parent callback with string year
-      if (onSubmit) await onSubmit(formData);
+    await addDoc(collection(db, "books"), bookForFirestore);
 
-      setConfirmation(`"${formData.title}" by ${formData.author} added successfully!`);
-      setTimeout(() => setConfirmation(null), 3000);
+    if (onSubmit) await onSubmit(formData);
 
-      setFormData({ title: "", author: "", isbn: "", year: "", description: "" });
-    } catch (error) {
-      console.error("Error adding book: ", error);
-      alert("Failed to add book. Please try again.");
-    }
-  };
+    setConfirmation(`"${formData.title}" by ${formData.author} added successfully!`);
+    setTimeout(() => setConfirmation(null), 3000);
+
+    setFormData({ title: "", author: "", isbn: "", year: "", description: "" });
+  } catch (error) {
+    console.error("Error adding book: ", error);
+    alert("Failed to add book. Please try again.");
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 mb-6 max-w-md">

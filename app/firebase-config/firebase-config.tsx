@@ -1,6 +1,6 @@
 // firebaseConfig.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, Firestore } from "firebase/firestore";
+import { initializeFirestore, Firestore } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword as firebaseSignIn } from "firebase/auth";
 
 const firebaseConfig = {
@@ -16,7 +16,10 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 const auth = getAuth(app);
-const db: Firestore = getFirestore(app);
+const db: Firestore = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+  ignoreUndefinedProperties: true,
+});
 
 // Helper function for signing in
 export const signIn = (email: string, password: string) =>
