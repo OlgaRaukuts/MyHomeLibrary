@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "homelibrary-3eb02"
-  }
+  },
+  "targets": {
+    "homelibrary-3eb02": {
+      "hosting": {
+        "homelibrary": [
+          "homelibrary-3eb02"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
