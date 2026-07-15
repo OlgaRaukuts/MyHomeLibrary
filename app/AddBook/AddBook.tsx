@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../app/firebase-config/firebase-config"; // adjust path if needed
 
 export interface BookFormData {
   title: string;
   author: string;
   isbn: string;
-  year: string; 
+  year: string;
   description: string;
 }
 
@@ -26,6 +24,7 @@ export default function AddBook({ onSubmit }: AddBookProps) {
   });
 
   const [confirmation, setConfirmation] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -33,42 +32,28 @@ export default function AddBook({ onSubmit }: AddBookProps) {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (!formData.title.trim() || !formData.author.trim()) {
-    alert("Please enter at least a title and author.");
-    return;
-  }
-
-  try {
-    const bookForFirestore: any = {
-      title: formData.title.trim(),
-      author: formData.author.trim(),
-      dateAdded: new Date(),
-    };
-
-    if (formData.year.trim() !== "") {
-      const parsedYear = Number(formData.year);
-      if (!isNaN(parsedYear)) bookForFirestore.year = parsedYear;
+    e.preventDefault();
+    if (!formData.title.trim()) {
+      setError("Please enter at least a book title.");
+      return;
     }
 
-    if (formData.isbn.trim() !== "") bookForFirestore.isbn = formData.isbn.trim();
-    if (formData.description.trim() !== "") bookForFirestore.description = formData.description.trim();
+    setError(null);
 
-    console.log("📘 Saving book:", bookForFirestore);
+    try {
+      if (onSubmit) await onSubmit(formData);
 
-    await addDoc(collection(db, "books"), bookForFirestore);
+      const authorLabel = formData.author.trim() || "Unknown author";
+      setConfirmation(`"${formData.title.trim()}" by ${authorLabel} added successfully!`);
+      setTimeout(() => setConfirmation(null), 4000);
 
-    if (onSubmit) await onSubmit(formData);
-
-    setConfirmation(`"${formData.title}" by ${formData.author} added successfully!`);
-    setTimeout(() => setConfirmation(null), 3000);
-
-    setFormData({ title: "", author: "", isbn: "", year: "", description: "" });
-  } catch (error) {
-    console.error("Error adding book: ", error);
-    alert("Failed to add book. Please try again.");
-  }
-};
+      setFormData({ title: "", author: "", isbn: "", year: "", description: "" });
+    } catch (err) {
+      console.error("Error adding book:", err);
+      setError("Failed to add book. Please try again.");
+      setTimeout(() => setError(null), 4000);
+    }
+  };
 
 
   return (
@@ -87,12 +72,11 @@ export default function AddBook({ onSubmit }: AddBookProps) {
         name="author"
         value={formData.author}
         onChange={handleChange}
-        placeholder="Book Author"
-        required
+        placeholder="Author (optional)"
         className="input input-bordered w-full"
       />
 
-      {formData.title.trim() && formData.author.trim() && (
+      {formData.title.trim() && (
         <>
           <input
             type="text"
@@ -124,6 +108,7 @@ export default function AddBook({ onSubmit }: AddBookProps) {
         Add a Book
       </button>
 
+      {error && <p className="text-red-500 mt-2">{error}</p>}
       {confirmation && <p className="text-green-600 mt-2">{confirmation}</p>}
     </form>
   );

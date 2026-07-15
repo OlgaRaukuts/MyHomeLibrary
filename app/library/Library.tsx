@@ -20,7 +20,6 @@ type SortOption = "titleAZ" | "titleZA" | "dateNewest" | "dateOldest";
 export default function Library() {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [confirmation, setConfirmation] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>("dateNewest");
   const [authorFilter, setAuthorFilter] = useState<string>("all");
   const [yearFilter, setYearFilter] = useState<string>("all");
@@ -46,7 +45,7 @@ export default function Library() {
     return () => unsubscribe();
   }, []);
 
-  // 🔹 Add a new book
+  // 🔹 Add a new book (single Firestore write — AddBook calls this via onSubmit)
   const handleAddBook = async (newBook: BookFormData) => {
     try {
       const yearValue = newBook.year?.trim()
@@ -59,18 +58,15 @@ export default function Library() {
         title: newBook.title.trim() || "Untitled",
         author: newBook.author.trim() || "Unknown",
         year: yearValue,
+        isbn: newBook.isbn?.trim() || null,
         description: newBook.description?.trim() || null,
-        dateAdded: Timestamp.fromDate(new Date()), // Firestore Timestamp
+        dateAdded: Timestamp.fromDate(new Date()),
       };
 
-      const docRef = await addDoc(collection(db, "books"), newBookData);
-
-      setConfirmation(`"${newBookData.title}" by ${newBookData.author} added successfully!`);
-      setTimeout(() => setConfirmation(null), 3000);
+      await addDoc(collection(db, "books"), newBookData);
     } catch (error) {
       console.error("Error adding book:", error);
-      setConfirmation("Failed to add book. Please try again.");
-      setTimeout(() => setConfirmation(null), 3000);
+      throw error; // re-throw so AddBook can show error feedback
     }
   };
 
@@ -115,11 +111,11 @@ export default function Library() {
     <main className="p-8 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">📚 My Library</h1>
 
-      {/* Book form */}
-      <AddBook onSubmit={handleAddBook} />
-
-      {/* Confirmation message */}
-      {confirmation && <p className="text-green-600 my-2">{confirmation}</p>}
+      {/* Search/Add Book section */}
+      <section className="mb-8">
+        <h2 className="text-xl font-semibold mb-3">Search / Add a Book</h2>
+        <AddBook onSubmit={handleAddBook} />
+      </section>
 
       {books.length > 0 && (
         <section className="mt-8 space-y-8">
