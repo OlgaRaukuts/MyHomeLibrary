@@ -134,52 +134,87 @@ export default function Library() {
           {/* All Books */}
           <div>
             <h2 className="text-2xl font-semibold mb-4">All Books</h2>
-            <Search value={searchQuery} onChange={setSearchQuery} />
+
+            {/* Filter and Sort Control Panel */}
+            <div className="bg-base-100 p-4 rounded-xl shadow-sm border border-base-300 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <Search value={searchQuery} onChange={setSearchQuery} />
+                
+                <div className="form-control">
+                  <select
+                    className="select select-bordered select-sm w-full max-w-xs"
+                    value={authorFilter}
+                    onChange={(e) => setAuthorFilter(e.target.value)}
+                  >
+                    <option value="all">All Authors</option>
+                    {authors.map((author) => (
+                      <option key={author} value={author}>
+                        {author}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-control">
+                  <select
+                    className="select select-bordered select-sm w-full max-w-xs"
+                    value={yearFilter}
+                    onChange={(e) => setYearFilter(e.target.value)}
+                  >
+                    <option value="all">All Years</option>
+                    {years.map((year) => (
+                      <option key={year} value={String(year)}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {(searchQuery || authorFilter !== "all" || yearFilter !== "all") && (
+                  <button 
+                    onClick={() => {
+                      setSearchQuery("");
+                      setAuthorFilter("all");
+                      setYearFilter("all");
+                    }}
+                    className="btn btn-ghost btn-sm text-error"
+                  >
+                    Clear Filters
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-500">Sort by:</span>
+                <select
+                  className="select select-bordered select-sm"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value as SortOption)}
+                >
+                  <option value="dateNewest">Date Added (Newest)</option>
+                  <option value="dateOldest">Date Added (Oldest)</option>
+                  <option value="titleAZ">Title (A-Z)</option>
+                  <option value="titleZA">Title (Z-A)</option>
+                </select>
+              </div>
+            </div>
 
             <div className="overflow-x-auto mt-4">
-              <table className="table-auto w-full border border-gray-300 rounded-lg">
-                <thead className="bg-gray-100">
+              <table className="table w-full border border-base-300 rounded-lg">
+                <thead>
                   <tr>
                     <th
-                      className="px-4 py-2 cursor-pointer"
+                      className="cursor-pointer hover:bg-base-200 transition"
                       onClick={() =>
                         setSortOption(sortOption === "titleAZ" ? "titleZA" : "titleAZ")
                       }
                     >
                       Title {sortOption === "titleAZ" ? "▲" : sortOption === "titleZA" ? "▼" : ""}
                     </th>
-                    <th className="px-4 py-2">
-                      Author
-                      <select
-                        className="ml-2 border rounded p-1"
-                        value={authorFilter}
-                        onChange={(e) => setAuthorFilter(e.target.value)}
-                      >
-                        <option value="all">All</option>
-                        {authors.map((author) => (
-                          <option key={author} value={author}>
-                            {author}
-                          </option>
-                        ))}
-                      </select>
-                    </th>
-                    <th className="px-4 py-2">
-                      Year
-                      <select
-                        className="ml-2 border rounded p-1"
-                        value={yearFilter}
-                        onChange={(e) => setYearFilter(e.target.value)}
-                      >
-                        <option value="all">All</option>
-                        {years.map((year) => (
-                          <option key={year} value={String(year)}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
-                    </th>
+                    <th>Author</th>
+                    <th>Year</th>
                     <th
-                      className="px-4 py-2 cursor-pointer"
+                      className="cursor-pointer hover:bg-base-200 transition"
                       onClick={() =>
                         setSortOption(sortOption === "dateNewest" ? "dateOldest" : "dateNewest")
                       }
@@ -190,15 +225,15 @@ export default function Library() {
                 </thead>
                 <tbody>
                   {filteredBooks.map((book) => (
-                    <tr key={book.id} className="border-t hover:bg-gray-50 transition">
-                      <td className="px-4 py-2">
-                        <Link href={`/library/${book.id}`} className="text-blue-600 hover:underline">
+                    <tr key={book.id} className="hover">
+                      <td>
+                        <Link href={`/library/${book.id}`} className="font-semibold text-primary hover:underline">
                           {book.title}
                         </Link>
                       </td>
-                      <td className="px-4 py-2">{book.author}</td>
-                      <td className="px-4 py-2">{book.year ?? "—"}</td>
-                      <td className="px-4 py-2">{new Date(book.dateAdded).toLocaleDateString()}</td>
+                      <td>{book.author}</td>
+                      <td>{book.year ?? "—"}</td>
+                      <td>{new Date(book.dateAdded).toLocaleDateString()}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -207,10 +242,10 @@ export default function Library() {
 
             {/* Total count */}
             {totalBooks > 0 && (
-              <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+              <div className="mt-6 bg-base-100 border border-base-300 p-4 rounded-lg">
                 <h3 className="font-semibold">TOTAL</h3>
                 <p>
-                  You have <span className="font-bold">{totalBooks}</span> book
+                  You have <span className="font-bold text-primary">{totalBooks}</span> book
                   {totalBooks !== 1 && "s"} in total.
                 </p>
               </div>
