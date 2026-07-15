@@ -1,16 +1,57 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import Library from "../../app/library/Library";
+import { addDoc } from "firebase/firestore";
+
+let mockSnapshotDocs: any[] = [];
+let onSnapshotCallback: any = null;
+
+vi.mock("firebase/firestore", async (importOriginal) => {
+  const actual = await importOriginal() as object;
+  return {
+    ...actual,
+    collection: vi.fn(),
+    query: vi.fn(),
+    orderBy: vi.fn(),
+    onSnapshot: vi.fn((q, callback) => {
+      onSnapshotCallback = callback;
+      callback({
+        docs: mockSnapshotDocs
+      });
+      return vi.fn();
+    }),
+    addDoc: vi.fn().mockImplementation((col, data) => {
+      const newDoc = {
+        id: "new-id",
+        data: () => ({
+          ...data,
+          dateAdded: { toDate: () => new Date() }
+        })
+      };
+      mockSnapshotDocs = [...mockSnapshotDocs, newDoc];
+      if (onSnapshotCallback) {
+        onSnapshotCallback({ docs: mockSnapshotDocs });
+      }
+      return Promise.resolve({ id: "new-id" });
+    }),
+    Timestamp: {
+      fromDate: vi.fn((date) => ({ toDate: () => date })),
+    }
+  };
+});
 
 vi.mock("../../app/AddBook/AddBook", () => ({
   default: vi.fn(({ onSubmit }) => (
     <button
       data-testid="add-book"
-      onClick={(e) =>
-        onSubmit(
-          e as any,
-          { title: "Test Book", author: "Test Author", year: "2023", description: "desc" }
-        )
+      onClick={() =>
+        onSubmit({
+          title: "Test Book",
+          author: "Test Author",
+          year: "2023",
+          description: "desc",
+          isbn: ""
+        })
       }
     >
       Add Book
@@ -37,13 +78,15 @@ vi.mock("next/link", () => ({
 }));
 
 beforeEach(() => {
-  localStorage.clear();
+  mockSnapshotDocs = [];
+  onSnapshotCallback = null;
+  vi.clearAllMocks();
 });
 
 describe("Library component", () => {
   test("renders Library component with no books", () => {
     render(<Library />);
-    expect(screen.getByText("Books in My Library")).toBeInTheDocument();
+    expect(screen.getByText("📚 My Library")).toBeInTheDocument();
     expect(screen.queryByTestId("book-card")).toBeNull();
   });
 
@@ -53,17 +96,15 @@ describe("Library component", () => {
     fireEvent.click(addBtn);
 
     expect(await screen.findByTestId("book-card")).toHaveTextContent("Test Book");
-    expect(screen.getByTestId("book-card")).toHaveTextContent("Test Book");
+    expect(addDoc).toHaveBeenCalled();
   });
 
-  test("saves book to localStorage", async () => {
+  test("saves book to firestore database", async () => {
     render(<Library />);
     const addBtn = screen.getByTestId("add-book");
     fireEvent.click(addBtn);
 
-    const stored = JSON.parse(localStorage.getItem("libraryBooks") || "[]");
-    expect(stored).toHaveLength(1);
-    expect(stored[0].title).toBe("Test Book");
+    expect(addDoc).toHaveBeenCalled();
   });
 
   test("renders total books count", async () => {
@@ -71,6 +112,6 @@ describe("Library component", () => {
     const addBtn = screen.getByTestId("add-book");
     fireEvent.click(addBtn);
 
-    expect(await screen.findByTestId("total-books")).toHaveTextContent("You have 1 book in total");
+    expect(await screen.findByTestId("total-books")).toHaveTextContent("You have 1 book in total.");
   });
 });

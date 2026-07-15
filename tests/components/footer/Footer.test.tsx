@@ -20,6 +20,6 @@ test('renders quick links with href', () => {
   const myBooksLink = screen.getByText('My Books');
 
   expect(homeLink).toHaveAttribute('href', '/');
-  expect(myBooksLink).toHaveAttribute('href', '/MyBooks');
+  expect(myBooksLink).toHaveAttribute('href', '/library');
 })
 })
