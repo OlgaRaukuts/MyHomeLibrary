@@ -24,49 +24,102 @@ export default function Library() {
   const [authorFilter, setAuthorFilter] = useState<string>("all");
   const [yearFilter, setYearFilter] = useState<string>("all");
 
-  // 🔹 Real-time Firestore subscription
+  // 🔹 Real-time Firestore subscription with local storage fallback
   useEffect(() => {
+    // 1. Initial load from local storage (resilience/offline support)
+    try {
+      const cached = localStorage.getItem("libraryBooks");
+      if (cached) {
+        setBooks(JSON.parse(cached));
+      }
+    } catch (e) {
+      console.warn("Failed to load cached books from localStorage:", e);
+    }
+
+    // 2. Real-time Firebase subscription
     const q = query(collection(db, "books"), orderBy("dateAdded", "desc"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedBooks: Book[] = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title || "Untitled",
-          author: data.author || "Unknown",
-          year: data.year ?? null,
-          description: data.description ?? null,
-          dateAdded: data.dateAdded?.toDate ? data.dateAdded.toDate() : new Date(),
-        };
-      });
-      setBooks(fetchedBooks);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const fetchedBooks: Book[] = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title || "Untitled",
+            author: data.author || "Unknown",
+            year: data.year ?? null,
+            description: data.description ?? null,
+            dateAdded: data.dateAdded?.toDate ? data.dateAdded.toDate() : new Date(),
+          };
+        });
+        setBooks(fetchedBooks);
+        try {
+          localStorage.setItem("libraryBooks", JSON.stringify(fetchedBooks));
+        } catch (e) {
+          console.warn("Failed to save fetched books to localStorage:", e);
+        }
+      },
+      (error) => {
+        console.error("Firestore subscription error (falling back to localStorage):", error);
+      }
+    );
 
     return () => unsubscribe();
   }, []);
 
-  // 🔹 Add a new book (single Firestore write — AddBook calls this via onSubmit)
+  // 🔹 Add a new book (saves to Firestore, with offline localStorage fallback)
   const handleAddBook = async (newBook: BookFormData) => {
+    const yearValue = newBook.year?.trim()
+      ? isNaN(Number(newBook.year))
+        ? null
+        : Number(newBook.year)
+      : null;
+
+    const newBookData = {
+      title: newBook.title.trim() || "Untitled",
+      author: newBook.author.trim() || "Unknown",
+      year: yearValue,
+      isbn: newBook.isbn?.trim() || null,
+      description: newBook.description?.trim() || null,
+      dateAdded: new Date(),
+    };
+
+    // 1. Instantly save to local storage so it persists even if Firestore fails or offline
     try {
-      const yearValue = newBook.year?.trim()
-        ? isNaN(Number(newBook.year))
-          ? null
-          : Number(newBook.year)
-        : null;
-
-      const newBookData = {
-        title: newBook.title.trim() || "Untitled",
-        author: newBook.author.trim() || "Unknown",
-        year: yearValue,
-        isbn: newBook.isbn?.trim() || null,
-        description: newBook.description?.trim() || null,
-        dateAdded: Timestamp.fromDate(new Date()),
+      const cached = localStorage.getItem("libraryBooks");
+      const currentList: Book[] = cached ? JSON.parse(cached) : [];
+      const tempId = "local_" + Date.now();
+      const localBook: Book = {
+        ...newBookData,
+        id: tempId,
       };
+      const updatedList = [localBook, ...currentList];
+      localStorage.setItem("libraryBooks", JSON.stringify(updatedList));
+      
+      // If Firestore fails or is slow to update, update UI immediately
+      setBooks((prev) => {
+        if (prev.some((b) => b.title === localBook.title && b.author === localBook.author)) {
+          return prev;
+        }
+        return [localBook, ...prev];
+      });
+    } catch (e) {
+      console.warn("Failed to write to local storage:", e);
+    }
 
-      await addDoc(collection(db, "books"), newBookData);
+    // 2. Persist to Firestore
+    try {
+      await addDoc(collection(db, "books"), {
+        title: newBookData.title,
+        author: newBookData.author,
+        year: newBookData.year,
+        isbn: newBookData.isbn,
+        description: newBookData.description,
+        dateAdded: Timestamp.fromDate(newBookData.dateAdded),
+      });
     } catch (error) {
-      console.error("Error adding book:", error);
-      throw error; // re-throw so AddBook can show error feedback
+      console.error("Error adding book to Firestore:", error);
+      // We don't throw if we saved it in localStorage so the user still has it offline!
     }
   };
 

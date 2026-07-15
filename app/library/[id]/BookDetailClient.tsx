@@ -17,22 +17,44 @@ export default function BookDetailClient() {
     if (!bookId) return;
 
     const fetchBook = async () => {
-      const docRef = doc(db, "books", bookId);
-      const docSnap = await getDoc(docRef);
+      try {
+        const docRef = doc(db, "books", bookId);
+        const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setBook({
-          id: docSnap.id,
-          title: data.title || 'No title',
-          author: data.author || 'Unknown',
-          year: data.year,
-          description: data.description,
-          dateAdded: data.dateAdded && data.dateAdded.toDate ? data.dateAdded.toDate() : new Date(),
-        });
-      } else {
-        setBook(null);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setBook({
+            id: docSnap.id,
+            title: data.title || 'No title',
+            author: data.author || 'Unknown',
+            year: data.year,
+            description: data.description,
+            dateAdded: data.dateAdded && data.dateAdded.toDate ? data.dateAdded.toDate() : new Date(),
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.warn("Firestore getDoc error, trying localStorage fallback:", err);
       }
+
+      // Try local storage fallback
+      try {
+        const cached = localStorage.getItem("libraryBooks");
+        if (cached) {
+          const currentList: Book[] = JSON.parse(cached);
+          const found = currentList.find((b) => b.id === bookId);
+          if (found) {
+            setBook(found);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to read from localStorage:", e);
+      }
+
+      setBook(null);
       setLoading(false);
     };
 
