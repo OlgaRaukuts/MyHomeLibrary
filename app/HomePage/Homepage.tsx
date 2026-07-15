@@ -32,24 +32,31 @@ const Homepage = () => {
     fetchBooks();
   }, []);
 
-  const filteredBooks = books.filter((book) =>
-    book.book.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredBooks = books.filter((book) => {
+    const title = book.book || (book as any).title || "";
+    const author = book.author || "";
+    return (
+      title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      author.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-6">
       <h1 className="text-3xl font-bold mb-4">📚 Books to Find</h1>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="input input-bordered w-full max-w-md mb-4"
-      />
+      <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-md mb-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="input input-bordered w-full"
+        />
+      </form>
       <ul className="space-y-3">
         {filteredBooks.map((book) => (
           <li key={book.id} className="p-4 border rounded-lg hover:shadow-md transition">
-            <strong className="text-lg">{book.book}</strong> by {book.author}
+            <strong className="text-lg">{book.book || (book as any).title || "Untitled"}</strong> by {book.author}
           </li>
         ))}
       </ul>
